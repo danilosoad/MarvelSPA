@@ -4,28 +4,30 @@
 
 Buscar um Personagem Marvel:
 <br />
-<br /><input placeholder="digite um nome.." @bind="@nome" />
+<br />
+<input placeholder="digite um nome.." @bind="@nome" />
 <br />
 <br />
-<button @onclick="BuscarPersonagem">Pesquisar</button>
+<button class="btn btn-primary" @onclick="BuscarPersonagem">Pesquisar</button>
+<button class="btn btn-primary" @onclick="AtualizarImagem">Muda Imagem</button>
 <br />
 <br />
-Descrição: <p>@resultado</p> 
+Descrição: <p>@resultado</p>
 <br />
 <img class="" src="@imgPath" style="height:200px; width:200px;" />
 
-
 @code{
-
+    string teste;
     string resultado;
     string imgPath;
+    string extension;
+    string path;
 
     string nome = string.Empty;
 
     private async void BuscarPersonagem()
     {
         var url = $"https://gateway.marvel.com/v1/public/characters?name={nome}&apikey=d659481d3f02d81e5ec1b11d8f40a089&hash=f4cc18f4da2791ef5d1d06b6a8d5c7d0&ts=1637856513";
-
 
         var httpRequestMessage = new HttpRequestMessage()
         {
@@ -36,41 +38,24 @@ Descrição: <p>@resultado</p>
         httpRequestMessage.Headers.Add("Accept", "*/*");
 
         var response = await _http.SendAsync(httpRequestMessage);
+
         var content = await response.Content.ReadAsStringAsync();
 
-        var personagem =  System.Text.Json.JsonSerializer.Deserialize<Resposta>(content);
+        var personagem = System.Text.Json.JsonSerializer.Deserialize<Resposta>(content);
 
         resultado = personagem.data.results.FirstOrDefault().description;
-        imgPath = personagem.data.results.FirstOrDefault().thumbnail.path;
-        imgPath = imgPath + "." + personagem.data.results.FirstOrDefault().thumbnail.extension;
 
-        Console.WriteLine(resultado);
-        Console.WriteLine(personagem.data.results.FirstOrDefault().thumbnail.path);
+        path = personagem.data.results.FirstOrDefault().thumbnail.path;
+        extension = "." + personagem.data.results.FirstOrDefault().thumbnail.extension;
+
+        imgPath = $"{path + extension}";
 
     }
 
-    class Resposta
+    private void AtualizarImagem()
     {
-        public Data data { get; set; }
-    }
-
-    class Data
-    {
-        public List<Personagem> results { get; set; }
-    }
-
-    class Personagem
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public Thumbnail thumbnail  { get; set; }
-    }
-
-    class Thumbnail
-    {
-        public string path { get; set; }
-        public string extension { get; set; }
+        Console.WriteLine(imgPath);
+        teste = imgPath;
     }
 
 }
