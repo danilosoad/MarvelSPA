@@ -1,0 +1,20 @@
+﻿<MudCard>
+    <MudCardMedia Image="@url" Height="200" />
+    <MudCardContent>
+        <MudText Typo="Typo.h5">@name</MudText>
+        <MudText Typo="Typo.body2">@description</MudText>
+    </MudCardContent>
+    <MudCardActions>
+        @*<MudButton Variant="Variant.Text" Color="Color.Primary">Share</MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>*@
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter]
+    public string url { get; set; }
+    [Parameter]
+    public string description { get; set; }
+    [Parameter]
+    public string name { get; set; }
+}

@@ -1,0 +1,47 @@
+﻿@page "/Hqs"
+
+<br />
+<MudTextField @bind-Value="@name" Label="Personagem" Variant="Variant.Text"></MudTextField>
+<br />
+<MudGrid>
+    <MudItem xs="12">
+        <MudGrid Spacing="7" Justify="Justify.Center">
+            <MudItem Style="height:200px;width:200px;">
+                @*<MudPaper Style="height:200px;width:200px;" > <img src="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg" height="200" width="200" /></MudPaper>*@
+                <ImagemCard url="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg"></ImagemCard>
+            </MudItem>
+            <MudItem Style="height:200px;width:200px;">
+                @*<MudPaper Style="height:200px;width:200px;" />*@
+                <ImagemCard url="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg"></ImagemCard>
+            </MudItem>
+            <MudItem Style="height:200px;width:200px;">
+                @*<MudPaper Style="height:200px;width:200px;" />*@
+                <ImagemCard url="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg"></ImagemCard>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+</MudGrid>
+@*<MudPaper Class="d-flex align-center mud-full-width px-4 py-2 mt-6" Elevation="0">
+    <MudButton Color="Color.Primary" OnClick="@AddSpacing">Change Spacing</MudButton>
+    <MudSpacer />
+    <MudText>Spacing: @spacing</MudText>
+</MudPaper>*@
+@code {
+
+    public string name { get; set; }
+
+    public int spacing { get; set; } = 2;
+    void AddSpacing()
+    {
+        if (spacing >= 10)
+        {
+            spacing = 0;
+        }
+        else
+        {
+            spacing += 1;
+        }
+        StateHasChanged();
+    }
+}
+
