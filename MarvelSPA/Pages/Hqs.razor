@@ -2,6 +2,8 @@
 
 <br />
 <MudTextField @bind-Value="@name" Label="Personagem" Variant="Variant.Text"></MudTextField>
+<MudButton Variant="Variant.Filled" @onclick="BuscarHqs" Color="Color.Primary">Pesquisar</MudButton>
+<MudOverlay @bind-Visible="isVisible" DarkBackground="true" AutoClose="true" />
 <br />
 <MudGrid>
     <MudItem xs="12">
@@ -22,11 +24,15 @@
     </MudItem>
 </MudGrid>
 @*<MudPaper Class="d-flex align-center mud-full-width px-4 py-2 mt-6" Elevation="0">
-    <MudButton Color="Color.Primary" OnClick="@AddSpacing">Change Spacing</MudButton>
-    <MudSpacer />
-    <MudText>Spacing: @spacing</MudText>
-</MudPaper>*@
+        <MudButton Color="Color.Primary" OnClick="@AddSpacing">Change Spacing</MudButton>
+        <MudSpacer />
+        <MudText>Spacing: @spacing</MudText>
+    </MudPaper>*@
 @code {
+    string resultado;
+    string imgPath;
+    string extension;
+    string path;
 
     public string name { get; set; }
 
@@ -43,5 +49,56 @@
         }
         StateHasChanged();
     }
-}
 
+    private async void BuscarHqs()
+    {
+        OpenOverlay();
+
+        var personagem = await PersonagemService.BuscarPersonagemByName(name);
+        var characterId = personagem.data.results.FirstOrDefault().id;
+
+        var comics = await HqService.BuscarHqsByCharacterId(characterId);
+        //var url = $"http://gateway.marvel.com/v1/public/characters/{characterId}/comics?apikey=d659481d3f02d81e5ec1b11d8f40a089&hash=f4cc18f4da2791ef5d1d06b6a8d5c7d0&ts=1637856513";
+
+        //var httpRequestMessage = new HttpRequestMessage()
+        //{
+        //    Method = new HttpMethod("GET"),
+        //    RequestUri = new Uri(url),
+        //};
+
+        //httpRequestMessage.Headers.Add("Accept", "*/*");
+
+        //var response = await _http.SendAsync(httpRequestMessage);
+
+        //var content = await response.Content.ReadAsStringAsync();
+
+        //var personagem = System.Text.Json.JsonSerializer.Deserialize<Resposta>(content);
+
+        //resultado = "there is no description for this character.";
+
+        //if (personagem.data.results.FirstOrDefault().description != "")
+        //    resultado = personagem.data.results.FirstOrDefault().description;
+
+        //path = personagem.data.results.FirstOrDefault().thumbnail.path;
+        //extension = "." + personagem.data.results.FirstOrDefault().thumbnail.extension;
+
+        //imgPath = $"{path + extension}";
+        //nome = string.Empty;
+
+        CloseOverlay();
+    }
+
+    private bool isVisible;
+
+    public void OpenOverlay()
+    {
+        isVisible = true;
+        StateHasChanged();
+    }
+
+    public void CloseOverlay()
+    {
+        isVisible = false;
+        StateHasChanged();
+    }
+}
