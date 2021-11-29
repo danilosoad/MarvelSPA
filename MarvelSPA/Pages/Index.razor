@@ -1,6 +1,6 @@
 ﻿@page "/personagem"
 @inject HttpClient _http;
-@using System.Text.Json
+
 
 <MudTextField @bind-Value="@nome" Label="Personagem" Variant="Variant.Text"></MudTextField>
 <br />
@@ -10,8 +10,13 @@
 <br />
 <br />
 
+
 <br />
-<ImagemCard url="@imgPath" description="@resultado" name="@nome" />
+@if (path != "")
+{
+    <ImagemCard url="@imgPath" description="@resultado" name="@nome" />
+    
+}
 
 @code{
     string resultado;
@@ -36,7 +41,6 @@
         extension = "." + personagem.data.results.FirstOrDefault().thumbnail.extension;
 
         imgPath = $"{path + extension}";
-        nome = string.Empty;
 
         CloseOverlay();
     }

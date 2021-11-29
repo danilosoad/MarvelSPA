@@ -9,5 +9,6 @@ namespace MarvelSPA.Models
     {
         public string name { get; set; }
         public Thumbnail thumbnail { get; set; }
+        public string title { get; set; }
     }
 }

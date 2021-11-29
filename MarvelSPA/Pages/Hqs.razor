@@ -2,37 +2,34 @@
 
 <br />
 <MudTextField @bind-Value="@name" Label="Personagem" Variant="Variant.Text"></MudTextField>
+<br />
 <MudButton Variant="Variant.Filled" @onclick="BuscarHqs" Color="Color.Primary">Pesquisar</MudButton>
 <MudOverlay @bind-Visible="isVisible" DarkBackground="true" AutoClose="true" />
 <br />
+<br />
 <MudGrid>
     <MudItem xs="12">
-        <MudGrid Spacing="7" Justify="Justify.Center">
-            <MudItem Style="height:200px;width:200px;">
-                @*<MudPaper Style="height:200px;width:200px;" > <img src="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg" height="200" width="200" /></MudPaper>*@
-                <ImagemCard url="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg"></ImagemCard>
-            </MudItem>
-            <MudItem Style="height:200px;width:200px;">
-                @*<MudPaper Style="height:200px;width:200px;" />*@
-                <ImagemCard url="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg"></ImagemCard>
-            </MudItem>
-            <MudItem Style="height:200px;width:200px;">
-                @*<MudPaper Style="height:200px;width:200px;" />*@
-                <ImagemCard url="http://i.annihil.us/u/prod/marvel/i/mg/9/80/6151f8ee70bd5.jpg"></ImagemCard>
-            </MudItem>
+        <MudGrid Spacing="10" Justify="Justify.Center">
+            @if (listaHQ != null)
+            {
+                @foreach (var item in listaHQ.Take(3))
+                {
+                    <br />
+                    <MudItem Style="height:200px;width:200px;">
+                        <ImagemCard url=@item.thumbnail.path name="" description="@item.title"></ImagemCard>
+                    </MudItem>
+                    <br />
+                }
+            }
         </MudGrid>
     </MudItem>
 </MudGrid>
-@*<MudPaper Class="d-flex align-center mud-full-width px-4 py-2 mt-6" Elevation="0">
-        <MudButton Color="Color.Primary" OnClick="@AddSpacing">Change Spacing</MudButton>
-        <MudSpacer />
-        <MudText>Spacing: @spacing</MudText>
-    </MudPaper>*@
 @code {
     string resultado;
     string imgPath;
     string extension;
     string path;
+    List<Personagem> listaHQ;
 
     public string name { get; set; }
 
@@ -58,32 +55,15 @@
         var characterId = personagem.data.results.FirstOrDefault().id;
 
         var comics = await HqService.BuscarHqsByCharacterId(characterId);
-        //var url = $"http://gateway.marvel.com/v1/public/characters/{characterId}/comics?apikey=d659481d3f02d81e5ec1b11d8f40a089&hash=f4cc18f4da2791ef5d1d06b6a8d5c7d0&ts=1637856513";
+        listaHQ = comics.data.results;
 
-        //var httpRequestMessage = new HttpRequestMessage()
-        //{
-        //    Method = new HttpMethod("GET"),
-        //    RequestUri = new Uri(url),
-        //};
+        foreach (var item in listaHQ)
+        {
+            item.thumbnail.path = getImageWithextension(item.thumbnail.path, item.thumbnail.extension);
+            Console.WriteLine(item.thumbnail.path);
+        }
 
-        //httpRequestMessage.Headers.Add("Accept", "*/*");
-
-        //var response = await _http.SendAsync(httpRequestMessage);
-
-        //var content = await response.Content.ReadAsStringAsync();
-
-        //var personagem = System.Text.Json.JsonSerializer.Deserialize<Resposta>(content);
-
-        //resultado = "there is no description for this character.";
-
-        //if (personagem.data.results.FirstOrDefault().description != "")
-        //    resultado = personagem.data.results.FirstOrDefault().description;
-
-        //path = personagem.data.results.FirstOrDefault().thumbnail.path;
-        //extension = "." + personagem.data.results.FirstOrDefault().thumbnail.extension;
-
-        //imgPath = $"{path + extension}";
-        //nome = string.Empty;
+        Console.WriteLine(comics.data.results.Count());
 
         CloseOverlay();
     }
@@ -100,5 +80,10 @@
     {
         isVisible = false;
         StateHasChanged();
+    }
+    private string getImageWithextension(string path, string extesion)
+    {
+        Console.WriteLine(path + "." + extesion);
+        return path + "." + extesion;
     }
 }
